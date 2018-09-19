@@ -18,9 +18,11 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/dgrijalva/jwt-go"
+	"os"
 )
 
-// decodeCmd represents the decode command
+// TODO add help and description info
 var decodeCmd = &cobra.Command{
 	Use:   "decode",
 	Short: "A brief description of your command",
@@ -31,20 +33,33 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("decode called")
+		if len(args) < 1 {
+			fmt.Println("You must provide a JWT encoded token")
+			os.Exit(126)
+		}
+
+		decode(args[0])
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(decodeCmd)
+}
 
-	// Here you will define your flags and configuration settings.
+// TODO extract this to other file
+// TODO add tests
+// TODO refactor to separate parsing from output routines
+func decode(token string) {
+	claims := jwt.MapClaims{}
+	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token)(interface{}, error){
+		return []byte(""), nil
+	})
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// decodeCmd.PersistentFlags().String("foo", "", "A help for foo")
+	for key, val := range parsedToken.Header {
+		fmt.Printf("HEADER Key: %v, value: %v\n", key, val)
+	}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// decodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	for key, val := range claims {
+		fmt.Printf("Key: %v, value: %v\n", key, val)
+	}
 }
