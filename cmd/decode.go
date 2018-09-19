@@ -1,4 +1,4 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2018 Pedro Mendes <pedrolopesme@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,16 +22,21 @@ import (
 	"os"
 )
 
-// TODO add help and description info
 var decodeCmd = &cobra.Command{
-	Use:   "decode",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "decode <JWT ENCODED TOKEN>",
+	Short: "decodes a JWT token and print its content",
+	Long: `Decode parse an JWT token and print its content breaking into sections. Example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+$ jaws decode <SOME JWT TOKEN>
+
+Header:
+	- key 1: value
+	- key 2: value
+
+Body:
+	- key 1: value
+	- key 2: value
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println("You must provide a JWT encoded token")
@@ -46,7 +51,7 @@ func init() {
 	rootCmd.AddCommand(decodeCmd)
 }
 
-// TODO extract this to other file
+// TODO extract this to somewhere else
 // TODO add tests
 // TODO refactor to separate parsing from output routines
 func decode(token string) {
