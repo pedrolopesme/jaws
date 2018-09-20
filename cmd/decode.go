@@ -54,7 +54,6 @@ func init() {
 
 // TODO extract this to somewhere else
 // TODO add tests
-// TODO refactor to separate parsing from output routines
 func decode(token string) {
 	claims := jwt.MapClaims{}
 	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
