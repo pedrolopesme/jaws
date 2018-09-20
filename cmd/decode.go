@@ -65,6 +65,11 @@ func decode(token string) {
 	Print("BODY", claims, color.Cyan)
 }
 
+// Print outputs a section of a JWT token, supporting title and a color.
+//
+//	- title : section name
+//	- output: content to be printed
+//  - color: color spec from fatih/color package
 func Print(title string, output map[string]interface{}, color func(format string, a ...interface{})) {
 	color("\n%v:", title)
 	for key, val := range output {
