@@ -24,8 +24,8 @@ import (
 
 var decodeCmd = &cobra.Command{
 	Use:   "decode <JWT ENCODED TOKEN>",
-	Short: "decodes a JWT token and print its content",
-	Long: `Decode parse an JWT token and print its content breaking into sections. Example:
+	Short: "decodes a JWT token and Print its content",
+	Long: `Decode parse an JWT token and Print its content breaking into sections. Example:
 
 $ jaws decode <SOME JWT TOKEN>
 
@@ -60,11 +60,12 @@ func decode(token string) {
 		return []byte(""), nil
 	})
 
-	for key, val := range parsedToken.Header {
-		fmt.Printf("HEADER Key: %v, value: %v\n", key, val)
-	}
+	Print(parsedToken.Header)
+	Print(claims)
+}
 
-	for key, val := range claims {
+func Print(output map[string]interface{}){
+	for key, val := range output {
 		fmt.Printf("Key: %v, value: %v\n", key, val)
 	}
 }
