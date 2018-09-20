@@ -21,6 +21,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"os"
 	"github.com/fatih/color"
+	"reflect"
 )
 
 var decodeCmd = &cobra.Command{
@@ -69,9 +70,19 @@ func decode(token string) {
 //	- title : section name
 //	- output: content to be printed
 //  - color: color spec from fatih/color package
+// TODO refactor this crap.
 func Print(title string, output map[string]interface{}, color func(format string, a ...interface{})) {
 	color("\n%v:", title)
 	for key, val := range output {
-		color("\t- %v : %v\n", key, val)
+		switch val.(type) {
+		case []interface{}:
+			color("\t- %v:\n", key)
+			for i := 0; i < reflect.ValueOf(val).Len(); i++ {
+				strct := reflect.ValueOf(val).Index(i).Interface()
+				color("\t\t- %v\n", strct)
+			}
+		default:
+			color("\t- %v : %v\n", key, val)
+		}
 	}
 }
