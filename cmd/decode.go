@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/dgrijalva/jwt-go"
 	"os"
+	"github.com/fatih/color"
 )
 
 var decodeCmd = &cobra.Command{
@@ -56,16 +57,17 @@ func init() {
 // TODO refactor to separate parsing from output routines
 func decode(token string) {
 	claims := jwt.MapClaims{}
-	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token)(interface{}, error){
+	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(""), nil
 	})
 
-	Print(parsedToken.Header)
-	Print(claims)
+	Print("HEADER", parsedToken.Header, color.Magenta)
+	Print("BODY", claims, color.Cyan)
 }
 
-func Print(output map[string]interface{}){
+func Print(title string, output map[string]interface{}, color func(format string, a ...interface{})) {
+	color("\n%v:", title)
 	for key, val := range output {
-		fmt.Printf("Key: %v, value: %v\n", key, val)
+		color("\t- %v : %v\n", key, val)
 	}
 }
