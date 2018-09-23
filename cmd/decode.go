@@ -17,10 +17,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/dgrijalva/jwt-go"
-	"os"
 	"github.com/fatih/color"
+	"github.com/spf13/cobra"
+	"os"
 	"reflect"
 )
 
@@ -51,6 +51,8 @@ Body:
 
 func init() {
 	rootCmd.AddCommand(decodeCmd)
+	rootCmd.Flags().StringP("key", "k", "", "Key to validate signature")
+	rootCmd.Flags().StringP("algorithm", "a", "HS256", "Algorithm to validate signature. Values: HS256, HS384, HS512.")
 }
 
 // TODO extract this to somewhere else
