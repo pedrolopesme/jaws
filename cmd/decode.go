@@ -27,7 +27,7 @@ import (
 var decodeCmd = &cobra.Command{
 	Use:   "decode <JWT ENCODED TOKEN>",
 	Short: "decodes a JWT token and Print its content",
-	Long: `Decode parse an JWT token and Print its content breaking into sections. Example:
+	Long: `DecodeAndPrint parse an JWT token and Print its content breaking into sections. Example:
 
 $ jaws decode <SOME JWT TOKEN>
 
@@ -45,7 +45,10 @@ Body:
 			os.Exit(126)
 		}
 
-		decode(args[0])
+		jwt := args[0]
+		key := cmd.Flag("key").Value.String()
+		algorithm := cmd.Flag("algorithm").Value.String()
+		DecodeAndPrint(jwt, key, algorithm)
 	},
 }
 
@@ -55,12 +58,20 @@ func init() {
 	rootCmd.Flags().StringP("algorithm", "a", "HS256", "Algorithm to validate signature. Values: HS256, HS384, HS512.")
 }
 
-// TODO extract this to somewhere else
-// TODO add tests
-func decode(token string) {
+// DecodeAndPrint prints the content of an encoded JWT .
+//
+//  TODO add tests
+//	- token : encoded jwt
+//	- key: secret key
+//  - algorithm: signing method
+func DecodeAndPrint(token string, key string, algorithm string) {
 	claims := jwt.MapClaims{}
 	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(""), nil
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(key), nil
 	})
 
 	Print("HEADER", parsedToken.Header, color.Magenta)
@@ -80,6 +91,7 @@ func Print(title string, output map[string]interface{}, color func(format string
 }
 
 // PrintLine: Output lines, formatting according to its content.
+//
 //	- key : claim name
 //	- val: claim content
 //  - color: color spec from fatih/color package
