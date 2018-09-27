@@ -46,8 +46,17 @@ Body:
 		}
 
 		jwt := args[0]
-		key := cmd.Flag("key").Value.String()
-		algorithm := cmd.Flag("algorithm").Value.String()
+		var key string
+		var algorithm string
+
+		if cmd.Flag("key") != nil {
+			key = cmd.Flag("key").Value.String()
+		}
+
+		if cmd.Flag("algorithm") != nil {
+			algorithm = cmd.Flag("algorithm").Value.String()
+		}
+
 		DecodeAndPrint(jwt, key, algorithm)
 	},
 }
