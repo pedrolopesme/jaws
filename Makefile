@@ -24,7 +24,7 @@ clean:
 run:
 	@echo "Running jaws with params: $(filter-out $@,$(MAKECMDGOALS))"
 	$(GOBUILD) -o $(BINARY_NAME)
-	./$(BINARY_NAME) $(filter-out $@,$(MAKECMDGOALS))
+	$(BINARY_NAME) $(filter-out $@,$(MAKECMDGOALS))
 
 fmt:
 	@echo "Running gofmt for all project files"
