@@ -50,7 +50,7 @@ Body:
 		var algorithm string
 
 		if cmd.Flag("key") != nil {
-			key = cmd.Flag("key").Value.String()
+			key, _ = cmd.Flags().GetString("key")
 		}
 
 		if cmd.Flag("algorithm") != nil {
@@ -62,9 +62,9 @@ Body:
 }
 
 func init() {
+	decodeCmd.Flags().StringP("key", "k", "", "Key to validate signature")
+	decodeCmd.Flags().StringP("algorithm", "a", "HS256", "Algorithm to validate signature. Values: HS256, HS384, HS512.")
 	rootCmd.AddCommand(decodeCmd)
-	rootCmd.Flags().StringP("key", "k", "", "Key to validate signature")
-	rootCmd.Flags().StringP("algorithm", "a", "HS256", "Algorithm to validate signature. Values: HS256, HS384, HS512.")
 }
 
 // DecodeAndPrint prints the content of an encoded JWT .
@@ -79,12 +79,16 @@ func DecodeAndPrint(token string, key string, algorithm string) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-
 		return []byte(key), nil
 	})
 
+	fmt.Println("KEY", key)
+	fmt.Println("ALGORITHM", algorithm)
+	fmt.Println("TOKEN IS VALID?", parsedToken.Valid)
+
 	Print("HEADER", parsedToken.Header, color.Magenta)
 	Print("BODY", claims, color.Cyan)
+	PrintSignature(parsedToken.Valid, "","")
 }
 
 // Print outputs a section of a JWT token, supporting title and a color.
@@ -114,5 +118,29 @@ func PrintLine(key string, val interface{}, color func(format string, a ...inter
 		}
 	default:
 		color("\t- %v : %v\n", key, val)
+	}
+}
+
+
+// Print the signature info
+//
+//	- valid : whether the signature is valid or not
+//	- key: signature key
+//  - algorithm: signing method
+func PrintSignature(valid bool, key string, algorithm string) {
+	var outputColor func(format string, a ...interface{})
+
+	if valid {
+		outputColor = color.Blue
+	} else {
+		outputColor = color.Red
+	}
+
+	outputColor("\nSIGNATURE:")
+	outputColor("\t- VALID: %v", valid)
+
+	if key == "" {
+		outputColor("\t- REASON: No signing key provided")
+		return
 	}
 }
