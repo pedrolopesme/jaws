@@ -82,13 +82,10 @@ func DecodeAndPrint(token string, key string, algorithm string) {
 		return []byte(key), nil
 	})
 
-	fmt.Println("KEY", key)
-	fmt.Println("ALGORITHM", algorithm)
-	fmt.Println("TOKEN IS VALID?", parsedToken.Valid)
-
 	Print("HEADER", parsedToken.Header, color.Magenta)
 	Print("BODY", claims, color.Cyan)
-	PrintSignature(parsedToken.Valid, "","")
+	PrintSignature(parsedToken.Valid, key, algorithm)
+	fmt.Println()
 }
 
 // Print outputs a section of a JWT token, supporting title and a color.
