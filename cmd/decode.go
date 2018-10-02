@@ -29,7 +29,7 @@ var decodeCmd = &cobra.Command{
 	Short: "decodes a JWT token and Print its content",
 	Long: `DecodeAndPrint parse an JWT token and Print its content breaking into sections. Example:
 
-$ jaws decode <SOME JWT TOKEN>
+$ jaws decode <SOME JWT TOKEN> -k <SOME SIGNING KEY>
 
 Header:
 	- key 1: value
@@ -47,23 +47,17 @@ Body:
 
 		jwt := args[0]
 		var key string
-		var algorithm string
 
 		if cmd.Flag("key") != nil {
 			key, _ = cmd.Flags().GetString("key")
 		}
 
-		if cmd.Flag("algorithm") != nil {
-			algorithm = cmd.Flag("algorithm").Value.String()
-		}
-
-		DecodeAndPrint(jwt, key, algorithm)
+		DecodeAndPrint(jwt, key)
 	},
 }
 
 func init() {
 	decodeCmd.Flags().StringP("key", "k", "", "Key to validate signature")
-	decodeCmd.Flags().StringP("algorithm", "a", "HS256", "Algorithm to validate signature. Values: HS256, HS384, HS512.")
 	rootCmd.AddCommand(decodeCmd)
 }
 
@@ -72,8 +66,7 @@ func init() {
 //  TODO add tests
 //	- token : encoded jwt
 //	- key: secret key
-//  - algorithm: signing method
-func DecodeAndPrint(token string, key string, algorithm string) {
+func DecodeAndPrint(token string, key string) {
 	claims := jwt.MapClaims{}
 	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -84,7 +77,7 @@ func DecodeAndPrint(token string, key string, algorithm string) {
 
 	Print("HEADER", parsedToken.Header, color.Magenta)
 	Print("BODY", claims, color.Cyan)
-	PrintSignature(parsedToken.Valid, key, algorithm)
+	PrintSignature(parsedToken.Valid, key)
 	fmt.Println()
 }
 
@@ -123,8 +116,7 @@ func PrintLine(key string, val interface{}, color func(format string, a ...inter
 //
 //	- valid : whether the signature is valid or not
 //	- key: signature key
-//  - algorithm: signing method
-func PrintSignature(valid bool, key string, algorithm string) {
+func PrintSignature(valid bool, key string) {
 	var outputColor func(format string, a ...interface{})
 
 	if valid {
