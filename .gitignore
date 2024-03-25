@@ -29,6 +29,7 @@
 *.iws
 
 ## Plugin-specific files:
+.history*
 
 # IntelliJ
 out/
