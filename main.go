@@ -15,9 +15,13 @@
 package main
 
 import (
-	"github.com/pedrolopesme/jaws/cmd"
+	"fmt"
+
+	"github.com/pedrolopeme/jaws/cmd"
 )
 
 func main() {
-	cmd.Execute()
+	if err := cmd.Execute(); err != nil {
+		fmt.Println(err)
+	}
 }

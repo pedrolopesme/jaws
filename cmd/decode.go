@@ -17,11 +17,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dgrijalva/jwt-go"
-	"github.com/fatih/color"
-	"github.com/spf13/cobra"
 	"os"
-	"reflect"
+
+	"github.com/fatih/color"
+	"github.com/pedrolopeme/jaws/internal/decode"
+	"github.com/pedrolopeme/jaws/internal/model"
+	"github.com/pedrolopeme/jaws/internal/utils"
+	"github.com/spf13/cobra"
 )
 
 var decodeCmd = &cobra.Command{
@@ -52,70 +54,21 @@ Body:
 			key, _ = cmd.Flags().GetString("key")
 		}
 
-		DecodeAndPrint(jwt, key)
+		token := decode.Decode(jwt, key)
+		print(token)
 	},
 }
 
-func init() {
-	decodeCmd.Flags().StringP("key", "k", "", "Key to validate signature")
-	rootCmd.AddCommand(decodeCmd)
-}
-
-// DecodeAndPrint prints the content of an encoded JWT .
-//
-//  TODO add tests
-//	- token : encoded jwt
-//	- key: secret key
-func DecodeAndPrint(token string, key string) {
-	claims := jwt.MapClaims{}
-	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(key), nil
-	})
-
-	Print("HEADER", parsedToken.Header, color.Magenta)
-	Print("BODY", claims, color.Cyan)
-	PrintSignature(parsedToken.Valid, key)
+func print(token *model.Token) {
+	utils.Print("HEADER", token.Header, color.Magenta)
+	utils.Print("BODY", token.Claims, color.Cyan)
 	fmt.Println()
 }
 
-// Print outputs a section of a JWT token, supporting title and a color.
-//
-//	- title : section name
-//	- output: content to be printed
-//  - color: color spec from fatih/color package
-func Print(title string, output map[string]interface{}, color func(format string, a ...interface{})) {
-	color("\n%v:", title)
-	for key, val := range output {
-		PrintLine(key, val, color)
-	}
-}
-
-// PrintLine: Output lines, formatting according to its content.
-//
-//	- key : claim name
-//	- val: claim content
-//  - color: color spec from fatih/color package
-func PrintLine(key string, val interface{}, color func(format string, a ...interface{})) {
-	switch val.(type) {
-	case []interface{}:
-		color("\t- %v:\n", key)
-		innerVal := reflect.ValueOf(val)
-		for i := 0; i < innerVal.Len(); i++ {
-			color("\t\t- %v\n", innerVal.Index(i).Interface())
-		}
-	default:
-		color("\t- %v : %v\n", key, val)
-	}
-}
-
-
 // Print the signature info
 //
-//	- valid : whether the signature is valid or not
-//	- key: signature key
+//   - valid : whether the signature is valid or not
+//   - key: signature key
 func PrintSignature(valid bool, key string) {
 	var outputColor func(format string, a ...interface{})
 
@@ -132,4 +85,9 @@ func PrintSignature(valid bool, key string) {
 		outputColor("\t- REASON: No signing key provided")
 		return
 	}
+}
+
+func init() {
+	decodeCmd.Flags().StringP("key", "k", "", "Key to validate signature")
+	rootCmd.AddCommand(decodeCmd)
 }
