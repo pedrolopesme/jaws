@@ -60,8 +60,8 @@ Body:
 }
 
 func print(token *model.Token) {
-	utils.Print("HEADER", token.Header, color.Magenta)
-	utils.Print("BODY", token.Claims, color.Cyan)
+	utils.Print("HEADER", token.Header)
+	utils.Print("BODY", token.Claims)
 	fmt.Println()
 }
 
