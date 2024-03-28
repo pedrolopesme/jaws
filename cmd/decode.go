@@ -66,6 +66,7 @@ func print(token *model.Token) {
 		[]string{"About the Token", "Value"},
 		[][]string{
 			{"Valid Signature", strconv.FormatBool(token.Valid)},
+			{"Type", token.Type},
 			{"Audience", token.Audience},
 			{"Issuer", token.Issuer},
 			{"Created At", token.CreatedAt},

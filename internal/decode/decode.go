@@ -21,6 +21,7 @@ func Decode(token string, key string) *model.Token {
 
 	return model.NewToken(
 		parsedToken.Valid,
+		getClaimStringValue(claims, "typ"),
 		getClaimStringValue(claims, "aud"),
 		getClaimStringValue(claims, "iss"),
 		decodeClaims(parsedToken.Header),
