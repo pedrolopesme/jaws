@@ -1,11 +1,11 @@
 package model
 
 type Token struct {
-	Header map[string]interface{}
-	Claims map[string]interface{}
+	Header string
+	Claims string
 }
 
-func NewToken(header map[string]interface{}, claims map[string]interface{}) *Token {
+func NewToken(header string, claims string) *Token {
 	return &Token{
 		Header: header,
 		Claims: claims,
