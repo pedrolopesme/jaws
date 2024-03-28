@@ -14,10 +14,14 @@ JAWS is a command-line tool that helps you decode and inspect JWT tokens. It's l
 
 To use JAWS, simply install it using go get and then run the jaws decode command followed by the JWT token you want to decode. For example:
 
+```bash
 $ go get github.com/pedrolopeme/jaws
 $ jaws decode <JWT ENCODED TOKEN>
+```
 
-JAWS will then print the decoded JWT token to the terminal.
+JAWS will then print the decoded JWT token to the terminal:
+
+[![asciicast](https://asciinema.org/a/XNjDhu99Lc3Nx1ifrT1JridD8.svg)](https://asciinema.org/a/XNjDhu99Lc3Nx1ifrT1JridD8)
 
 ## How to Contribute
 
