@@ -19,7 +19,6 @@ import (
 
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/pedrolopeme/jaws/internal/decode"
 	"github.com/pedrolopeme/jaws/internal/model"
 	"github.com/pedrolopeme/jaws/internal/utils"
@@ -63,28 +62,6 @@ func print(token *model.Token) {
 	utils.Print("HEADER", token.Header)
 	utils.Print("BODY", token.Claims)
 	fmt.Println()
-}
-
-// Print the signature info
-//
-//   - valid : whether the signature is valid or not
-//   - key: signature key
-func PrintSignature(valid bool, key string) {
-	var outputColor func(format string, a ...interface{})
-
-	if valid {
-		outputColor = color.Blue
-	} else {
-		outputColor = color.Red
-	}
-
-	outputColor("\nSIGNATURE:")
-	outputColor("\t- VALID: %v", valid)
-
-	if key == "" {
-		outputColor("\t- REASON: No signing key provided")
-		return
-	}
 }
 
 func init() {
