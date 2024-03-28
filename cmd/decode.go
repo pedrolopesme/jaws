@@ -59,6 +59,7 @@ Body:
 	},
 }
 
+// print outputs the content of a Token object.
 func print(token *model.Token) {
 	utils.PrinBreaklines(2)
 	utils.PrintTable(
@@ -67,13 +68,12 @@ func print(token *model.Token) {
 			{"Valid Signature", strconv.FormatBool(token.Valid)},
 			{"Audience", token.Audience},
 			{"Issuer", token.Issuer},
+			{"Created At", token.CreatedAt},
+			{"Expires At", token.ExpiresAt},
 		},
 	)
-	utils.PrinBreaklines(2)
 	utils.Print("HEADER", token.Header)
-	utils.PrinBreaklines(1)
 	utils.Print("BODY", token.Claims)
-	utils.PrinBreaklines(1)
 }
 
 func init() {
