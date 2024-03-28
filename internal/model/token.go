@@ -1,13 +1,20 @@
 package model
 
 type Token struct {
-	Header string
-	Claims string
+	Algorithm string
+	Valid     bool
+	Audience  string
+	Issuer    string
+	Header    string
+	Claims    string
 }
 
-func NewToken(header string, claims string) *Token {
+func NewToken(valid bool, audience, issuer, header, claims string) *Token {
 	return &Token{
-		Header: header,
-		Claims: claims,
+		Valid:    valid,
+		Audience: audience,
+		Issuer:   issuer,
+		Header:   header,
+		Claims:   claims,
 	}
 }

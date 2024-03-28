@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"os"
 
@@ -59,9 +60,20 @@ Body:
 }
 
 func print(token *model.Token) {
+	utils.PrinBreaklines(2)
+	utils.PrintTable(
+		[]string{"About the Token", "Value"},
+		[][]string{
+			{"Valid Signature", strconv.FormatBool(token.Valid)},
+			{"Audience", token.Audience},
+			{"Issuer", token.Issuer},
+		},
+	)
+	utils.PrinBreaklines(2)
 	utils.Print("HEADER", token.Header)
+	utils.PrinBreaklines(1)
 	utils.Print("BODY", token.Claims)
-	fmt.Println()
+	utils.PrinBreaklines(1)
 }
 
 func init() {
