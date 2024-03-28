@@ -1,5 +1,7 @@
 # JAWS: The JWT Swiss Army Knife
 
+![alt text](image.png)
+
 ## Objective
 
 JAWS is a command-line tool that helps you decode and inspect JWT tokens. It's like a Swiss Army knife for JWTs, giving you the power to:
