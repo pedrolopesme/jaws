@@ -2,7 +2,6 @@ package decode
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -13,12 +12,8 @@ import (
 func Decode(token string, key string) *model.Token {
 	claims := jwt.MapClaims{}
 	parsedToken, _ := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
 		return []byte(key), nil
 	})
-
 	return model.NewToken(
 		parsedToken.Valid,
 		getClaimStringValue(claims, "typ"),
@@ -50,7 +45,13 @@ func getClaimStringValue(claims jwt.MapClaims, claim string) string {
 
 // getClaimValues retrieves the value of a specific claim from a jwt.MapClaims object.
 func getClaimDateValue(claims jwt.MapClaims, claim string) string {
-	if value, ok := claims[claim].(float64); ok {
+	claimValue := claims[claim]
+
+	if claimValue == nil {
+		return ""
+	}
+
+	if value, ok := claimValue.(float64); ok {
 		date := time.Unix(int64(value), 0)
 		return date.Format("2006-01-02 15:04:05Z")
 	}
