@@ -29,6 +29,21 @@ JAWS will then print the decoded JWT token to the terminal:
 
 JAWS is an open source project and we welcome contributions from the community. If you find a bug or have a feature request, please open an issue on the GitHub page. If you want to contribute code, please fork the repository and submit a pull request.
 
+## Tests and Coverage
+JAWS has a comprehensive test suite that covers its functionality. To run the tests, simply run the following command:
+
+```bash
+$ make test
+```
+
+JAWS also has a coverage report that shows how much of the code is covered by the tests. To generate the coverage report, run the following command:
+
+```bash
+$ make coverage
+```
+
+The coverage report will be generated in the coverage directory.
+
 ## Dependencies
 
 JAWS depends on the following libraries:
